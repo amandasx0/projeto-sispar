@@ -1,0 +1,107 @@
+.ContainerMainLogin {
+    display: flex;
+}
+
+.ImageLogin {
+    height: 100vh;
+}
+
+.BoxLogin {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+
+    img {
+        width: 10rem;
+    }
+}
+
+.Title {
+    font-size: 2em;
+    width: 37%;
+    text-align: center;
+    color: #23282F;
+    margin-top: 10px;
+}
+
+.SubTitle {
+    color: #0844C4;
+    font-size: 1em;
+    font-weight: 700;
+    margin-top: 6px;
+}
+
+.Form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px; 
+}
+
+.InputForm {
+    width: 22rem;
+    height: 2.5rem;
+    border: solid 1px #CBD4E1;
+    border-radius: 6px;
+    padding: 12px;
+    margin-top: 6px;
+
+    &:hover {
+        border: 1px solid #23282F;
+    }
+
+    &:focus {
+        box-shadow: 0px 0px 5px #63758D;
+    }
+   
+}
+
+.Error {
+    font-size: 8px;
+    color: red;
+    padding: 4px;
+}
+
+.LinkPassword {
+    color: #23282F;
+    font-size: 0.9em;
+    font-weight: 400;
+    text-decoration: none;
+    margin-top: 12px;
+    text-align: center;
+}
+
+.BoxButton {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.3rem;
+    width: 100%;
+
+    :last-child {
+        margin-left: 8px;
+    }
+}
+
+.Button {
+    width: 8rem;
+    height: 2.5rem;
+    border-radius: 6px;
+    border: none;
+    background-color: #001A3D;
+    color: #FFF;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.ButtonSecondary {
+    background-color: #00BEDD;
+
+    a {
+        text-decoration: none;
+        color: #FFF;
+        font-weight: 700;
+        cursor: pointer;
+    }
+}
+     
