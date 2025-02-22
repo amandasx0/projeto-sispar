@@ -1,9 +1,10 @@
-import S from "./style.module.scss"
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+
 import imageLogin from "../../assets/login/image-login.svg"
 import Logo from "../../assets/login/logo.svg"
-import { Link } from "react-router-dom"
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+
+import S from "./style.module.scss"
 
 function Login() {
   const navigate = useNavigate()

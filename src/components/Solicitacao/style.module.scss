@@ -1,0 +1,178 @@
+.ContainerMain {
+  padding: 2rem 1.5rem 2rem 6rem;
+  height: 100vh;
+}
+
+.ContainerForm {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.FirstGrid {
+  display: grid;
+  grid-template-columns: 50% 25% 25%;
+  grid-template-rows: auto auto;
+  height: auto;
+  width: 37%;
+}
+
+.Title {
+  color: #23282f;
+  font-weight: 700;
+}
+
+.ItemGrid {
+  display: flex;
+  flex-direction: column;
+}
+
+.ItemGrid:not(:first-child) {
+  margin-left: 8px;
+}
+
+.LastItemFirstGrid {
+  display: flex;
+  flex-direction: column;
+  grid-column: span 3;
+  margin-top: 1rem;
+}
+
+.InputForm {
+  padding: 10px;
+  border: 1px solid #cbd4e1;
+  border-radius: 6px;
+  margin-top: 4px;
+}
+
+.Line {
+  width: 1px;
+  height: 9rem;
+  background-color: #cbd4e1;
+}
+
+.SecondGrid {
+  display: grid;
+  grid-template-columns: 25% 25% 50%;
+  grid-template-rows: auto auto;
+  height: auto;
+  width: 60%;
+}
+
+.BoxContainerGrid {
+  display: flex;
+  justify-content: space-between;
+}
+
+.BoxLastGrid {
+  display: flex;
+}
+
+.InputFormLastGrid {
+  padding: 10px;
+  border: 1px solid #cbd4e1;
+  border-radius: 6px;
+  margin-top: 4px;
+}
+
+.SmallerInput {
+  width: 4.5rem;
+}
+
+.BiggerInput {
+  width: 6.5rem;
+}
+
+.BoxButton {
+  display: flex;
+}
+
+.ButtonAdding {
+  background-color: #001a3d;
+  width: 5.7rem;
+  height: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  border-radius: 6px;
+  margin-top: 1.4rem;
+  border: none;
+  font-weight: 700;
+  margin-right: 6px;
+  cursor: pointer;
+
+  img {
+    width: 12px;
+    height: 12px;
+    margin-right: 6px;
+  }
+}
+
+.ButtonDeleting {
+  background-color: #00bedd;
+  height: 2.5rem;
+  width: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  margin-top: 1.4rem;
+  border: none;
+  cursor: pointer;
+}
+
+.ContainerTable {
+  overflow-x: auto;
+  border: 1px solid #f1f4f9;
+  border-radius: 6px;
+  width: 100%;
+  margin-top: 2rem;
+  height: 60%;
+}
+
+.Table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  text-align: left;
+}
+
+.TableHeader {
+  background: #f3f4f6;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  text-align: left;
+  white-space: nowrap;
+}
+
+td,
+th {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  white-space: nowrap;
+}
+
+td:first-child,
+th:first-child {
+  border-left: none;
+  justify-content: center;
+}
+
+tr:hover {
+  background-color: #f9f9f9;
+}
+
+.IconButtonDelete {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+td:first-child {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}

@@ -1,0 +1,90 @@
+.ContainerMain { 
+    padding: 2rem 1.5rem 2rem 3rem;
+    height: 100vh;
+}
+
+.BoxContent {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-self: flex-start;
+}
+
+.Title {
+    font-weight: 700;
+    font-size: 2em;
+}
+
+.Description {
+    font-weight: 400;
+    margin-top: 6px;
+}
+
+.BoxItens {
+    display: flex;
+    margin-top: 1.5rem;
+
+    a {
+        text-decoration: none;
+        color: #23282F;
+    }
+}
+
+.Link:not(:first-child) {
+    margin-left: 1.5rem;
+}
+
+.Item {
+    border: 1px solid #CBD4E1;
+    border-radius: 6px;
+    width: 18rem;
+    height: 13rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.TitleItem {
+    font-weight: 700;
+    font-size: 1.2em;
+    margin-top: 6px;
+}
+
+.BoxData {
+    border: 1px solid #CBD4E1;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 1.5rem 0;
+    margin-top: 1.5rem;
+}
+
+.ItemBoxData {
+    display: flex;
+    align-items: center;
+
+    p {
+        margin-left: 6px;
+    }
+}
+
+.BoxFooter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 1rem;
+
+    img {
+        width: auto;
+        height: auto;
+    }
+
+    p {
+        color: #0844C4;
+        font-weight: 400;
+    }
+}
