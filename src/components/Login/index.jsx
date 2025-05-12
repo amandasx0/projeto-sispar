@@ -1,10 +1,12 @@
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 import imageLogin from "../../assets/login/image-login.svg"
 import Logo from "../../assets/login/logo.svg"
 
 import S from "./style.module.scss"
+
+import api from "../../services/api"
 
 function Login() {
   const navigate = useNavigate()
@@ -12,46 +14,40 @@ function Login() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
 
-  const logins = [
-     {
-        user: "amandasarah@gmail.com",
-        senha: "eternamente"
-     },
-     {
-        user: "karynne@gmail.com",
-        senha: "vainaweb"
-     },
-     {
-        user: "samuel@gmail.com",
-        senha: "vainaweb"
-     },
-    ]
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-
-    if (!email || !password) {
-      setError("Preencha todos os campos")
-      return
-    }
-
-    if (!email.includes("@")) {
-      setError("Digite um email válido")
-      return
-    }
-
-    const userExists = logins.some(
-        (login) => login.user === email && login.senha === password
-      )
+    const handleSubmit = async (e) => {
+      e.preventDefault();
     
-      if (!userExists) {
-        setError("Email ou senha inválidos")
-        return
+      if (!email || !password) {
+        setError("Preencha todos os campos");
+        return;
       }
+    
+      if (!email.includes("@")) {
+        setError("Digite um email válido");
+        return;
+      }
+    
+      try {
+        const response = await api.post("/colaborador/login", {
+          email,
+          senha: password,
+        });
+    
+    
+        if (response.status !== 200) {
+          setError("Email ou senha inválidos");
+          return;
+        }
 
-    setError("")
-    navigate("/reembolso")
-  };
+        navigate("/reembolso");
+      } catch (e) {
+        console.log(e)
+      }
+    };
+
+  const handleNewAccount = () => {
+    navigate("/criar-conta")
+  }
 
   return (
     <section className={S.ContainerMainLogin}>
@@ -92,8 +88,8 @@ function Login() {
             <button type="submit" className={S.Button}>
               Entrar
             </button>
-            <button className={`${S.Button} ${S.ButtonSecondary}`}>
-              <Link to="/criar-conta">Criar conta</Link>
+            <button type="button" onClick={handleNewAccount} className={`${S.Button} ${S.ButtonSecondary}`}>
+              Criar conta
             </button>
           </div>
         </form>

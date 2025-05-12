@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import NavBar from "../Navbar";
@@ -8,33 +8,35 @@ import IconMore from "../../assets/Solicitacao/icon-more.png";
 import IconDelete from "../../assets/Solicitacao/icon-delete.png";
 import IconBin from "../../assets/Solicitacao/icon-bin.png";
 
+import api from "../../services/api";
+
 import S from "./style.module.scss";
 
 function Solicitacao() {
   const { register, handleSubmit, reset } = useForm();
 
   const [clearData, setClearData] = useState(false);
-  const [removeCollaborator, setRemoveCollaborator] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [reimbursement, setRemoveReimbursement] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+  const [searchReimbursement, setSearchReimbursement] = useState(false)
+  const [installment, setInstallment] = useState('')
 
-  const [data, setData] = useState([
-    {
-      colaborador: "Vitor Carvalho",
-      empresa: "WSS001",
-      prestacao: "329456",
-      data: "08/01/2025",
-      motivo: "Desp. de viagem a...",
-      ctrCusto: "1100110002 - FIN...",
-      ordInt: "0003",
-      div: "002",
-      pep: "001",
-      moeda: "BRL",
-      distKm: "434Km",
-      valKm: "0.65",
-      valFaturado: "242.10",
-      despesa: "40.05",
-    },
-  ]);
+  const [data, setData] = useState([]);
+
+  const fetchReembolsos = async () => {
+    try {
+      const response = await api.get("/reembolso/pegar-reembolsos");
+      setData(response.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      console.log("sucesso");
+    }
+  };
+
+  useEffect(() => {
+    fetchReembolsos();
+  }, []);
 
   const handleClearForm = () => {
     reset({
@@ -54,50 +56,75 @@ function Solicitacao() {
       faturado: "",
       despesa: "",
     });
-    setClearData(false)
+    setClearData(false);
   };
 
-  const onSubmit = (formData) => {
+  const onSubmit = async (formData) => {
     const formattedDate = new Date(formData.date).toLocaleDateString("pt-BR");
 
-    const newEntry = {
-      colaborador: formData.name || "Novo Colaborador",
-      empresa: formData.empresa || "",
-      prestacao: formData.prestacao || "",
-      data: formattedDate || "",
-      motivo: formData.selection_despesa || "",
-      ctrCusto: formData.selection_custo || "",
-      ordInt: formData.ordem_int || "",
-      div: formData.div || "",
-      pep: formData.PEP || "",
-      moeda: formData.selection_moeda || "",
-      distKm: formData.distancia || "",
-      valKm: formData.valor || "",
-      valFaturado: formData.faturado || "",
-      despesa: formData.despesa || "",
-    };
+    try {
+      const response = await api.post("/reembolso/cadastrar", {
+        nome: formData.name,
+        empresa: formData.empresa,
+        prestacao: formData.prestacao,
+        data: formattedDate,
+        descricao: formData.motivo,
+        tipo_despesa: formData.selection_despesa,
+        ctr_custo: formData.selection_custo,
+        ordem: formData.ordem_int,
+        div: formData.div,
+        pep: formData.PEP,
+        moeda: formData.selection_moeda,
+        distancia: formData.distancia,
+        valor_km: formData.valor,
+        valor_faturado: formData.faturado,
+        despesa: formData.despesa,
+      });
 
-    setData((prevData) => [...prevData, newEntry]);
+      if (response.status >= 400) {
+        console.log("error");
+        return;
+      }
+
+      await fetchReembolsos();
+    } catch (e) {
+      console.log(e);
+    }
+
     handleClearForm();
   };
 
-  const handleDelete = () => {
-    if (selectedIndex !== null) {
-      setData((prevData) => prevData.filter((_, index) => index !== selectedIndex));
-      setRemoveCollaborator(false)
-      setSelectedIndex(null)
+  const handleDelete = async () => {
+    if (selectedId !== null) {
+      try {
+        await api.delete(`/reembolso/deletar/${selectedId}`);
+        setData((prevData) =>
+          prevData.filter((item) => item.id !== selectedId)
+        );
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setRemoveReimbursement(false);
+        setSelectedId(null);
+      }
     }
   };
-  
 
   const handleClearData = () => {
     setClearData(true);
   };
 
-  const handleDeleteCollaborator = (index) => {
-    setSelectedIndex(index)
-    setRemoveCollaborator(true)
+  const searchInstallment = async () => {
+  try {
+    const response = await api.get(`/reembolso/buscar-prestacao/${installment}`);
+    setData(response.data);
+    setInstallment(null)
+    setSearchReimbursement(false)
+  } catch (error) {
+    console.log("Erro ao buscar prestação:", error);
+    setSearchReimbursement(false)
   }
+};
 
   return (
     <>
@@ -108,34 +135,78 @@ function Solicitacao() {
             <h3 className={S.TextModal}>
               Deseja realmente limpar os campos preenchidos acima?
             </h3>
-           
+
             <div className={S.BoxButtonModal}>
-              <button className={S.FirstButton}  onClick={() => setClearData(false)}>Continuar editando</button>
-              <button className={S.SecondButton} onClick={handleClearForm}>Sim, limpar</button>
-            </div> 
+              <button
+                className={S.FirstButton}
+                onClick={() => setClearData(false)}
+              >
+                Continuar editando
+              </button>
+              <button className={S.SecondButton} onClick={handleClearForm}>
+                Sim, limpar
+              </button>
+            </div>
           </div>
         </>
       )}
 
-
-  {removeCollaborator && (
+      {reimbursement && (
         <>
           <div className={S.Overlay} />
           <div className={S.Modal}>
             <h3 className={S.TextModal}>
               Deseja realmente excluir os dados dessa linha?
             </h3>
-           
+
             <div className={S.BoxButtonModal}>
-              <button className={S.FirstButton}  onClick={() => setRemoveCollaborator(false)}>Fechar</button>
-              <button className={S.SecondButton} onClick={handleDelete}>Sim, limpar</button>
-            </div> 
+              <button
+                className={S.FirstButton}
+                onClick={() => setRemoveReimbursement(false)}
+              >
+                Fechar
+              </button>
+              <button className={S.SecondButton} onClick={handleDelete}>
+                Sim, limpar
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
+      {searchReimbursement && (
+        <>
+          <div className={S.Overlay} />
+          <div className={S.Modal}>
+            <h3 className={S.TextModal}>
+              Qual prestação você deseja visualizar?
+            </h3>
+
+            <form>
+              <input
+                  type="text"
+                 value={installment}
+                  onChange={(e) => setInstallment(e.target.value)}
+                  className={S.InputFormModal}
+                />
+             </form>
+             <div className={S.BoxButtonModal}>
+              <button
+                className={S.FirstButton}
+                onClick={() => setSearchReimbursement(false)}
+              >
+                Fechar
+              </button>
+               <button className={S.SecondButton} onClick={searchInstallment}>
+                Buscar
+              </button>
+            </div>
           </div>
         </>
       )}
 
       <div className={S.BoxAll}>
-        <NavBar />
+        <NavBar onSearchClick={() => setSearchReimbursement(true)} />
 
         <div className={S.ContainerMain}>
           <Navigate />
@@ -340,30 +411,33 @@ function Solicitacao() {
                 </tr>
               </thead>
               <tbody>
-                {data.map((item, index) => (
-                  <tr key={index}>
+                {data.map((item) => (
+                  <tr key={item.id}>
                     <td>
                       <button
                         className={S.IconButtonDelete}
-                        onClick={() => handleDeleteCollaborator(index)}
+                        onClick={() => {
+                          setSelectedId(item.id); 
+                          setRemoveReimbursement(true); 
+                        }}
                       >
                         <img src={IconBin} />
                       </button>{" "}
                     </td>
-                    <td>{item.colaborador}</td>
+                    <td>{item.nome}</td>
                     <td>{item.empresa}</td>
                     <td>{item.prestacao}</td>
-                    <td>{item.data}</td>
-                    <td>{item.motivo}</td>
-                    <td>{item.motivo}</td>
-                    <td>{item.ctrCusto}</td>
-                    <td>{item.ordInt}</td>
+                    <td>{new Date(item.data).toLocaleDateString("pt-BR")}</td>
+                    <td>{item.descricao}</td>
+                    <td>{item.tipo_despesa}</td>
+                    <td>{item.ctr_custo}</td>
+                    <td>{item.ordem}</td>
                     <td>{item.div}</td>
                     <td>{item.pep}</td>
                     <td>{item.moeda}</td>
-                    <td>{item.distKm}</td>
-                    <td>{item.valKm}</td>
-                    <td>{item.valFaturado}</td>
+                    <td>{item.distancia}</td>
+                    <td>{item.valor_km}</td>
+                    <td>{item.valor_faturado}</td>
                     <td>{item.despesa}</td>
                   </tr>
                 ))}

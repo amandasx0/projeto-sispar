@@ -1,29 +1,44 @@
 .Container {
-    width: 6rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 1.5rem;
-    border-right: 3px solid #CBD4E1;
+  width: 6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.5rem;
+  border-right: 3px solid #cbd4e1;
 
-    img {
-        width: 2.5rem;
-        height: 2.5rem;
-    }
+  img {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+.Expanded {
+  width: 15rem;
+}
+
+.IconMenu {
+  cursor: pointer;
 }
 
 .ContainerProfile {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 22rem;
+
+  div {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 22rem;
 
-    div {
-        display: flex;
-        flex-direction: column;
-        
-        img {
-            margin-top: 10px;
-        }
+    img {
+      margin-top: 10px;
     }
+  }
+}
+
+.Button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
 }

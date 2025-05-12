@@ -1,0 +1,104 @@
+body {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.Line {
+  background-color: #001a3d;
+  height: 5rem;
+  position: relative;
+}
+
+.ContainerMain {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 83vh;
+}
+
+.Title {
+  font-size: 2em;
+  width: 37%;
+  text-align: center;
+  color: #23282f;
+  margin-top: 10px;
+}
+
+.Form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.BoxForm {
+  display: flex;
+  flex-direction: column;
+  margin-top: 5px;
+}
+
+.TitleForm {
+  margin-right: 10px;
+}
+
+.InputForm {
+  width: 22rem;
+  height: 2.5rem;
+  border: solid 1px #cbd4e1;
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 6px;
+
+  &:hover {
+    border: 1px solid #23282f;
+  }
+
+  &:focus {
+    box-shadow: 0px 0px 5px #63758d;
+  }
+}
+
+.BoxButton {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.3rem;
+  width: 100%;
+
+  :last-child {
+    margin-left: 8px;
+  }
+}
+
+.Button {
+  width: 8rem;
+  height: 2.5rem;
+  border-radius: 6px;
+  border: none;
+  background-color: #001a3d;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ButtonSecondary {
+  background-color: #00bedd;
+
+  a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+  }
+}
+
+.Error {
+  font-size: 8px;
+  color: red;
+  padding: 4px;
+}
+
+.Sucess {
+  font-size: 8px;
+  color: green;
+  padding: 4px;
+}
