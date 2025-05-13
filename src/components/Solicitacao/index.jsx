@@ -18,14 +18,19 @@ function Solicitacao() {
   const [clearData, setClearData] = useState(false);
   const [reimbursement, setRemoveReimbursement] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
-  const [searchReimbursement, setSearchReimbursement] = useState(false)
-  const [installment, setInstallment] = useState('')
+  const [searchReimbursement, setSearchReimbursement] = useState(false);
+  const [installment, setInstallment] = useState("");
+  const [valorFaturado, setValorFaturado] = useState(0);
+  const [valorDespesa, setValorDespesa] = useState(0);
 
   const [data, setData] = useState([]);
 
   const fetchReembolsos = async () => {
     try {
-      const response = await api.get("/reembolso/pegar-reembolsos");
+      const response = await api.get("/reembolso/pegar-reembolsos", {
+        params: { status: 'Solicitados'}
+      });
+    
       setData(response.data);
     } catch (err) {
       console.error(err);
@@ -37,6 +42,20 @@ function Solicitacao() {
   useEffect(() => {
     fetchReembolsos();
   }, []);
+
+  useEffect(() => {
+    const totalFaturado = data.reduce(
+      (acc, item) => acc + (parseFloat(item.valor_faturado) || 0),
+      0
+    );
+    setValorFaturado(totalFaturado);
+
+    const totalDespesa = data.reduce(
+      (acc, item) => acc + (parseFloat(item.despesa) || 0),
+      0
+    );
+    setValorDespesa(totalDespesa);
+  }, [data]);
 
   const handleClearForm = () => {
     reset({
@@ -55,6 +74,7 @@ function Solicitacao() {
       valor: "",
       faturado: "",
       despesa: "",
+      status: "",
     });
     setClearData(false);
   };
@@ -79,6 +99,7 @@ function Solicitacao() {
         valor_km: formData.valor,
         valor_faturado: formData.faturado,
         despesa: formData.despesa,
+        status: 'Solicitados',
       });
 
       if (response.status >= 400) {
@@ -115,16 +136,32 @@ function Solicitacao() {
   };
 
   const searchInstallment = async () => {
-  try {
-    const response = await api.get(`/reembolso/buscar-prestacao/${installment}`);
-    setData(response.data);
-    setInstallment(null)
-    setSearchReimbursement(false)
-  } catch (error) {
-    console.log("Erro ao buscar prestação:", error);
-    setSearchReimbursement(false)
+    try {
+      const response = await api.get(
+        `/reembolso/buscar-prestacao/${installment}`
+      );
+      setData(response.data);
+      setInstallment(null);
+      setSearchReimbursement(false);
+    } catch (error) {
+      console.log("Erro ao buscar prestação:", error);
+      setSearchReimbursement(false);
+    }
+  };
+
+  const handleForAnalysis = async () => {
+     try {
+      const response = await api.post(
+        `/reembolso/enviar-para-analise`
+      );
+     if (response.status === 200) {
+      console.log("Reembolsos enviados para análise!");
+      await fetchReembolsos();
+    }
+    } catch (e) {
+        console.error("Erro ao enviar para análise:", e);
+    }
   }
-};
 
   return (
     <>
@@ -184,20 +221,20 @@ function Solicitacao() {
 
             <form>
               <input
-                  type="text"
-                 value={installment}
-                  onChange={(e) => setInstallment(e.target.value)}
-                  className={S.InputFormModal}
-                />
-             </form>
-             <div className={S.BoxButtonModal}>
+                type="text"
+                value={installment}
+                onChange={(e) => setInstallment(e.target.value)}
+                className={S.InputFormModal}
+              />
+            </form>
+            <div className={S.BoxButtonModal}>
               <button
                 className={S.FirstButton}
                 onClick={() => setSearchReimbursement(false)}
               >
                 Fechar
               </button>
-               <button className={S.SecondButton} onClick={searchInstallment}>
+              <button className={S.SecondButton} onClick={searchInstallment}>
                 Buscar
               </button>
             </div>
@@ -211,6 +248,7 @@ function Solicitacao() {
         <div className={S.ContainerMain}>
           <Navigate />
           <div className={S.ContainerForm}>
+           
             <section className={S.FirstGrid}>
               <div className={S.ItemGrid}>
                 <label className={S.Title}>Nome Completo</label>
@@ -390,6 +428,7 @@ function Solicitacao() {
           </div>
           <div className={S.ContainerTable}>
             <table className={S.Table}>
+           
               <thead>
                 <tr>
                   <th></th>
@@ -411,14 +450,16 @@ function Solicitacao() {
                 </tr>
               </thead>
               <tbody>
+                
                 {data.map((item) => (
                   <tr key={item.id}>
+                   
                     <td>
                       <button
                         className={S.IconButtonDelete}
                         onClick={() => {
-                          setSelectedId(item.id); 
-                          setRemoveReimbursement(true); 
+                          setSelectedId(item.id);
+                          setRemoveReimbursement(true);
                         }}
                       >
                         <img src={IconBin} />
@@ -443,6 +484,35 @@ function Solicitacao() {
                 ))}
               </tbody>
             </table>
+            {data.length === 0 && (
+              <p className={S.TextNothing}>Nenhuma solicitação encontrada.</p>
+            )}
+          </div>
+          <div>
+            <div className={S.BoxFooter}>
+              <div className={S.BoxPrice}>
+                <p className={S.TextPrice}>Total Faturado</p>
+                <div className={S.Price}>
+                  {valorFaturado.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </div>
+              </div>
+              <div className={S.BoxPrice}>
+                <p className={S.TextPrice}>Total Despesa</p>
+                <div className={S.Price}>
+                  {valorDespesa.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </div>
+              </div>
+              <button className={S.Button} onClick={handleForAnalysis}>Enviar para Análise</button>
+              <button className={`${S.Button} ${S.ButtonSecondary}`}>
+                Cancelar Solicitação
+              </button>
+            </div>
           </div>
         </div>
       </div>

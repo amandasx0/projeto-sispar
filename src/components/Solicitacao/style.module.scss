@@ -249,3 +249,50 @@ td:first-child {
   cursor: pointer;
   background-color: #00bedd;
 }
+
+.BoxFooter {
+  display: flex;
+  align-items: flex-end;
+  justify-content: end;
+  padding-top: 1.5rem;
+}
+
+.BoxPrice {
+ margin-right: 1rem;
+}
+
+.TextPrice {
+  margin-bottom: 2px;
+   color: #23282f;
+}
+
+.TextNothing {
+  color: #CBD4E1;
+  font-size: 1.5em;
+  text-align: center;
+  margin-top: 13rem;
+}
+
+.Button {
+  width: 12rem;
+  height: 2.5rem;
+  border-radius: 6px;
+  border: none;
+  background-color: #001a3d;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ButtonSecondary {
+  background-color: #a60b2f;
+  margin-left: 1rem;
+}
+
+.Price {
+  border: 1px solid #CBD4E1;
+    padding: 8px; 
+    border-radius: 5px;
+    color: #CBD4E1;
+    width: 8rem;
+}

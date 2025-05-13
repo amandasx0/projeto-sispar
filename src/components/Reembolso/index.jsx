@@ -1,6 +1,8 @@
 import Navigate from "../Nav";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
+import api from "../../services/api";
 import NavBar from "../Navbar";
 
 import IconReembolso from "../../assets/Dashboard/icon-reembolso.png";
@@ -15,25 +17,66 @@ import IconSistemaAtualizado from "../../assets/Dashboard/icon-sistema.png";
 import S from "./style.module.scss";
 
 function Reembolso() {
+  const fetched = useRef(false);
+  const [summary, setSummary] = useState({
+    Solicitados: 0,
+    "Em Análise": 0,
+    Aprovado: 0,
+    Rejeitado: 0,
+  });
+
+  const fetchReembolsos = async () => {
+    try {
+      const response = await api.get("/reembolso/pegar-reembolsos");
+
+      const counts = response.data.reduce(
+        (acc, item) => {
+          const status = item.status;
+          if (acc[status] !== undefined) {
+            acc[status]++;
+          }
+          return acc;
+        },
+        {
+          Solicitados: 0,
+          "Em Análise": 0,
+          Aprovado: 0,
+          Rejeitado: 0,
+        }
+      );
+
+      setSummary(counts);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+ useEffect(() => {
+    if (!fetched.current) {
+      fetched.current = true;
+      fetchReembolsos();
+    }
+  }, []);
+  
   const data = [
     {
       urlImage: IconSolicitados,
-      amount: "182",
+      amount: summary.Solicitados,
       text: "Solicitados",
     },
     {
       urlImage: IconEmAnalise,
-      amount: "74",
-      text: "Em análise",
+      amount: summary["Em Análise"],
+      text: "Em Análise",
     },
     {
       urlImage: IconAprovados,
-      amount: "195",
+      amount: summary.Aprovado,
       text: "Aprovados",
     },
     {
       urlImage: IconRejeitados,
-      amount: "41",
+      amount: summary.Rejeitado,
       text: "Rejeitados",
     },
   ];
